@@ -111,9 +111,9 @@ class OrderManager {
 }
 
 class DatabaseManager {
-    private static final String URL = "jdbc:mysql://localhost:3306/pizza_shop";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";  
+    private static final String URL = "jdbc:mysql://sql12.freesqldatabase.com:3306/sql12751440";
+    private static final String USER = "sql12751440";
+    private static final String PASSWORD = "TgYpCSWjMJ";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -310,7 +310,6 @@ public class PizzaShop18028V4 {
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (validateCustomerDetails()) {
-                    
                     DatabaseManager.saveOrder(pizza, size, quantity, toppings, orderTotal, nameField.getText(), emailField.getText(), phoneField.getText());
                     showBillScreen();
                 } else {
@@ -375,7 +374,26 @@ public class PizzaShop18028V4 {
     }
 
     private boolean validateCustomerDetails() {
-        return !nameField.getText().isEmpty() && !emailField.getText().isEmpty() && !phoneField.getText().isEmpty();
+        String name = nameField.getText().trim();
+        String email = emailField.getText().trim();
+        String phone = phoneField.getText().trim();
+
+        if (name.isEmpty() || name.matches(".*\\d.*")) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid name (no numbers).", "Invalid Name", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (email.isEmpty() || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid email address.", "Invalid Email", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (phone.isEmpty() || !phone.matches("^[0-9]{10}$")) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid 10-digit phone number.", "Invalid Phone Number", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 
     private String getSelectedToppings() {
@@ -392,6 +410,10 @@ public class PizzaShop18028V4 {
     }
 
     public static void main(String[] args) {
-        new PizzaShop18028V4();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new PizzaShop18028V4();
+            }
+        });
     }
 }
